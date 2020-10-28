@@ -3,3 +3,26 @@
 
 <p><span>email: </span><%= @user.email %></p>
 <p><span>ツイート内容: </span><%= @tweet.body %></p>
+<label>コメント</label>
+<%= form_with(model:[@tweet, @comment], local: true) do |f| %>
+  <%= f.text_area :body, placeholder: "Comment Here" %>
+  <%= f.submit "Send" %>
+<% end %>
+<ol>
+  <% @tweet.comments.each do |comment| %>
+  <div class="comment-text">
+    <div class="comment-author clearfix">
+      <a href="#" class="link-author"><%= comment.user.email %></a>
+      <span class="comment-meta">
+        <span class="comment-date"><%= comment.created_at.strftime('%Y/%m/%d') %></span>
+      </span>
+    </div>
+    <div class="comment-entry"><%= comment.body %></div>
+    <% if comment.user == current_user %>
+      <div>
+        <%= link_to "Comment Delete", tweet_comment_path(comment.tweet, comment), method: :delete %>
+      </div>
+    <% end %>
+  </div>
+  <% end %>
+</ol>
